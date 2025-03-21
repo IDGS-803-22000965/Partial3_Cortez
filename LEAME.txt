@@ -1,0 +1,43 @@
+REPOSITORIO
+https://github.com/IDGS-803-22000965/Partial3_Cortez
+
+BASE DE DATOS
+DROP DATABASE IF EXISTS Examen;
+CREATE DATABASE Examen;
+USE Examen;
+
+CREATE TABLE pedidos (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    nombre VARCHAR(100) NOT NULL,
+    direccion VARCHAR(200) NOT NULL,
+    telefono VARCHAR(15) NOT NULL,
+    fecha DATETIME DEFAULT CURRENT_TIMESTAMP,
+    total FLOAT NOT NULL
+);
+
+CREATE TABLE detalle_pedidos (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    pedido_id INT NOT NULL,
+    tamano VARCHAR(50) NOT NULL,
+    ingredientes VARCHAR(200) NOT NULL,
+    cantidad INT NOT NULL,
+    subtotal FLOAT NOT NULL,
+    FOREIGN KEY (pedido_id) REFERENCES pedidos(id)
+);
+CREATE TABLE IF NOT EXISTS usuarios (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    username VARCHAR(50) NOT NULL UNIQUE,
+    password VARCHAR(255) NOT NULL,
+    rol VARCHAR(20) NOT NULL
+);
+select * from usuarios;
+select * from pedidos;
+select * from detalle_pedidos;
+
+INSERT INTO pedidos (nombre, direccion, telefono, fecha, total) VALUES
+('Juan Pérez', 'Calle Principal 123', '555-1234', '2025-02-13 10:30:00', 350.00),
+('María García', 'Avenida Central 456', '555-5678', '2025-12-13 12:45:00', 220.50),
+('Carlos López', 'Plaza Mayor 789', '555-9012', '2025-05-12 18:20:00', 475.75);
+
+
+

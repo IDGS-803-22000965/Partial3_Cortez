@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Meta refresh para recargar la página después de 2 segundos -->
+    {% if get_flashed_messages() %}
+        <meta http-equiv="refresh" content="2;url={{ url_for('registro') }}">
+    {% endif %}
+    <title>Registro</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/flowbite/1.8.1/flowbite.min.css" rel="stylesheet">
+</head>
+<body class="bg-gray-100 flex items-center justify-center min-h-screen">
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            {% for category, message in messages %}
+                <div class="fixed top-4 left-1/2 transform -translate-x-1/2 w-full max-w-md">
+                    <div class="p-4 mb-4 text-sm text-white rounded-lg {{ 'bg-green-500' if category == 'éxito' else 'bg-red-500' }}" role="alert">
+                        {{ message }}
+                    </div>
+                </div>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+
+    <div class="w-full max-w-md bg-white shadow-lg rounded-lg p-8">
+        <h2 class="text-2xl font-bold text-gray-900 text-center mb-6">Registro</h2>
+        <form method="POST" action="{{ url_for('registro') }}">
+            {{ formulario.csrf_token }}
+            <div class="mb-6">
+                <label for="username" class="block mb-2 text-sm font-medium text-gray-900">Nombre de usuario</label>
+                <input type="text" id="username" name="username" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" placeholder="Ingresa tu nombre de usuario" required>
+            </div>
+            <div class="mb-6">
+                <label for="password" class="block mb-2 text-sm font-medium text-gray-900">Contraseña</label>
+                <input type="password" id="password" name="password" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" placeholder="••••••••" required>
+            </div>
+            <div class="mb-6">
+                <label for="rol" class="block mb-2 text-sm font-medium text-gray-900">Rol</label>
+                <select id="rol" name="rol" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
+                    <option value="alumno">Alumno</option>
+                    <option value="profesor">Profesor</option>
+                </select>
+            </div>
+            <button type="submit" class="w-full text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center">Registrarse</button>
+        </form>
+        <p class="text-sm text-gray-600 mt-4 text-center">
+            ¿Ya tienes una cuenta? <a href="{{ url_for('iniciar_sesion') }}" class="text-blue-600 hover:underline">Inicia Sesión</a>
+        </p>
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/1.8.1/flowbite.min.js"></script>
+</body>
+</html>

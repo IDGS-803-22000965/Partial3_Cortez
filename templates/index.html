@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Don Pizzero</title>
+    <!-- Flowbite and Tailwind CSS -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.0.0/flowbite.min.css" rel="stylesheet" />
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+</head>
+<body class="bg-gray-50 dark:bg-gray-900">
+    <div class="container mx-auto p-4">
+        <nav class="bg-white border-gray-200 dark:bg-gray-800 dark:border-gray-700 rounded-lg shadow mb-6">
+            <div class="flex flex-wrap items-center justify-between mx-auto p-4">
+                <a href="#" class="flex items-center">
+                    <svg class="w-8 h-8 text-red-500 mr-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
+                        <path d="M10 0a10 10 0 1 0 10 10A10.011 10.011 0 0 0 10 0Zm0 18a8 8 0 1 1 0-16 8 8 0 0 1 0 16Zm1-8h4a1 1 0 0 1 0 2h-4a1 1 0 0 1 0-2Zm-2-2H5a1 1 0 0 0 0 2h4a1 1 0 0 0 0-2Zm-4 6h10a1 1 0 0 0 0-2H5a1 1 0 0 0 0 2Z"/>
+                    </svg>
+                    <span class="self-center text-2xl font-semibold whitespace-nowrap dark:text-white">Don Pizzero</span>
+                </a>
+                <!-- Botón de Cerrar Sesión -->
+                <div>
+                    <a href="{{ url_for('cerrar_sesion') }}" class="text-white bg-red-600 hover:bg-red-700 focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 dark:bg-red-500 dark:hover:bg-red-600 focus:outline-none dark:focus:ring-red-800">
+                        Cerrar Sesión
+                    </a>
+                </div>
+            </div>
+        </nav>
+        
+        <!-- Mensajes Flash -->
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div id="alert-{{category}}" class="flex items-center p-4 mb-4 {% if category == 'success' %}text-green-800 bg-green-50 dark:bg-gray-800 dark:text-green-400{% else %}text-red-800 bg-red-50 dark:bg-gray-800 dark:text-red-400{% endif %} rounded-lg" role="alert">
+                        <div class="ms-3 text-sm font-medium">{{ message }}</div>
+                        <button type="button" class="ms-auto -mx-1.5 -my-1.5 bg-white text-gray-400 hover:text-gray-900 rounded-lg focus:ring-2 focus:ring-gray-300 p-1.5 hover:bg-gray-100 inline-flex items-center justify-center h-8 w-8 dark:bg-gray-800 dark:text-gray-500 dark:hover:text-white dark:hover:bg-gray-700" data-dismiss-target="#alert-{{category}}" aria-label="Close">
+                            <span class="sr-only">Cerrar</span>
+                            <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
+                                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"/>
+                            </svg>
+                        </button>
+                    </div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+
+        <!-- Formulario Unificado -->
+        <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-6 mb-6">
+            <h2 class="text-xl font-bold mb-4 text-gray-900 dark:text-white">Datos del Cliente y Agregar Pizza</h2>
+            <form method="POST">
+                {{ cliente_form.hidden_tag() }}
+                {{ pizza_form.hidden_tag() }}
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+                    <div>
+                        {{ cliente_form.nombre.label(class="block mb-2 text-sm font-medium text-gray-900 dark:text-white") }}
+                        {{ cliente_form.nombre(class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white") }}
+                    </div>
+                    <div>
+                        {{ cliente_form.direccion.label(class="block mb-2 text-sm font-medium text-gray-900 dark:text-white") }}
+                        {{ cliente_form.direccion(class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white") }}
+                    </div>
+                    <div>
+                        {{ cliente_form.telefono.label(class="block mb-2 text-sm font-medium text-gray-900 dark:text-white") }}
+                        {{ cliente_form.telefono(class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white") }}
+                    </div>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+                    <div>
+                        {{ pizza_form.tamano.label(class="block mb-2 text-sm font-medium text-gray-900 dark:text-white") }}
+                        {{ pizza_form.tamano(class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white") }}
+                    </div>
+                    <div>
+                        {{ pizza_form.ingredientes.label(class="block mb-2 text-sm font-medium text-gray-900 dark:text-white") }}
+                        {{ pizza_form.ingredientes(class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white") }}
+                    </div>
+                    <div>
+                        {{ pizza_form.cantidad.label(class="block mb-2 text-sm font-medium text-gray-900 dark:text-white") }}
+                        {{ pizza_form.cantidad(class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white") }}
+                    </div>
+                </div>
+                <div class="flex gap-4">
+                    <button type="submit" name="agregar_pizza" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">
+                        <svg class="w-4 h-4 mr-2 inline-block" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 18 18">
+                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 1v16M1 9h16"/>
+                        </svg>
+                        Agregar Pizza
+                    </button>
+                    <button type="submit" name="terminar_pedido" class="text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-2.5 dark:bg-green-600 dark:hover:bg-green-700 focus:outline-none dark:focus:ring-green-800">
+                        <svg class="w-4 h-4 mr-2 inline-block" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
+                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m7 10 2 2 4-4m6 2a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"/>
+                        </svg>
+                        Terminar Pedido
+                    </button>
+                </div>
+            </form>
+        </div>
+
+        <!-- Lista de Pizzas en el Pedido -->
+        <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-6 mb-6">
+            <div class="flex justify-between items-center mb-4">
+                <h2 class="text-xl font-bold dark:text-white">Ticket Pedido</h2>
+                <p class="text-xl font-bold text-gray-900 dark:text-white">Total: ${{ total }}</p>
+            </div>
+            <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
+                <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
+                    <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+                        <tr>
+                            <th scope="col" class="px-6 py-3">Tamaño</th>
+                            <th scope="col" class="px-6 py-3">Ingredientes</th>
+                            <th scope="col" class="px-6 py-3">Cantidad</th>
+                            <th scope="col" class="px-6 py-3">Subtotal</th>
+                            <th scope="col" class="px-6 py-3">Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% if pizzas %}
+                            {% for pizza in pizzas %}
+                                <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
+                                    <td class="px-6 py-4">{{ pizza.tamano }}</td>
+                                    <td class="px-6 py-4">{{ pizza.ingredientes }}</td>
+                                    <td class="px-6 py-4">{{ pizza.cantidad }}</td>
+                                    <td class="px-6 py-4">${{ pizza.subtotal }}</td>
+                                    <td class="px-6 py-4">
+                                        <form method="POST" style="display: inline;">
+                                            {{ cliente_form.hidden_tag() }}
+                                            <input type="hidden" name="quitar_pizza" value="{{ loop.index0 }}">
+                                            <button type="submit" class="text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-sm px-3 py-1.5 dark:bg-red-600 dark:hover:bg-red-700 focus:outline-none dark:focus:ring-red-800">
+                                                <svg class="w-4 h-4 inline-block" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 18 20">
+                                                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M1 5h16M7 8v8m4-8v8M7 1h4a1 1 0 0 1 1 1v3H6V2a1 1 0 0 1 1-1ZM3 5h12v13a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V5Z"/>
+                                                </svg>
+                                                Quitar
+                                            </button>
+                                        </form>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        {% else %}
+                            <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
+                                <td colspan="5" class="px-6 py-4 text-center">No hay pizzas en el pedido</td>
+                            </tr>
+                        {% endif %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Sección de Ventas -->
+        <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
+            <div class="flex justify-between items-center mb-4">
+                <h2 class="text-xl font-bold dark:text-white">Ventas de {{ titulo_periodo }}</h2>
+                <p class="text-xl font-bold text-gray-900 dark:text-white">Total Ventas: ${{ total_ventas_periodo }}</p>
+            </div>
+            <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
+                <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
+                    <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+                        <tr>
+                            <th scope="col" class="px-6 py-3">Cliente</th>
+                            <th scope="col" class="px-6 py-3">Teléfono</th>
+                            <th scope="col" class="px-6 py-3">Dirección</th>
+                            <th scope="col" class="px-6 py-3">Fecha</th>
+                            <th scope="col" class="px-6 py-3">Total</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% if pedidos_filtrados %}
+                            {% for pedido in pedidos_filtrados %}
+                                <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
+                                    <td class="px-6 py-4">{{ pedido.nombre }}</td>
+                                    <td class="px-6 py-4">{{ pedido.telefono }}</td>
+                                    <td class="px-6 py-4">{{ pedido.direccion }}</td>
+                                    <td class="px-6 py-4">{{ pedido.fecha.strftime('%d/%m/%Y %H:%M') }}</td>
+                                    <td class="px-6 py-4">${{ pedido.total }}</td>
+                                </tr>
+                            {% endfor %}
+                        {% else %}
+                            <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
+                                <td colspan="5" class="px-6 py-4 text-center">No hay ventas en el período seleccionado</td>
+                            </tr>
+                        {% endif %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Script de Flowbite -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.0.0/flowbite.min.js"></script>
+</body>
+</html>
