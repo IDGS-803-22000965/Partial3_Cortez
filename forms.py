@@ -1,6 +1,6 @@
 from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, SelectField, IntegerField, TextAreaField
-from wtforms.validators import DataRequired, Length
+from wtforms.validators import DataRequired, Length, NumberRange
 
 class FormularioLogin(FlaskForm):
     username = StringField('Nombre de usuario', validators=[DataRequired(), Length(min=4, max=50)])
@@ -17,6 +17,14 @@ class ClienteForm(FlaskForm):
     telefono = StringField('Teléfono', validators=[DataRequired(), Length(min=8, max=15)])
 
 class PizzaForm(FlaskForm):
-    tamano = SelectField('Tamaño', choices=[('Chica', 'Chica ($40)'), ('Mediana', 'Mediana ($80)'), ('Grande', 'Grande ($120)')])
-    ingredientes = SelectField('Ingredientes', choices=[('Jamón', 'Jamón ($10)'), ('Piña', 'Piña ($10)'), ('Champiñones', 'Champiñones ($10)')])
-    cantidad = IntegerField('Cantidad', validators=[DataRequired()])
+    tamano = SelectField('Tamaño', choices=[
+        ('Chica', 'Chica ($40)'), 
+        ('Mediana', 'Mediana ($80)'), 
+        ('Grande', 'Grande ($120)')
+    ], validators=[DataRequired()])
+    ingredientes = SelectField('Ingredientes', choices=[
+        ('Jamón', 'Jamón ($10)'), 
+        ('Piña', 'Piña ($10)'), 
+        ('Champiñones', 'Champiñones ($10)')
+    ], validators=[DataRequired()])
+    cantidad = IntegerField('Cantidad', validators=[DataRequired(), NumberRange(min=1)])

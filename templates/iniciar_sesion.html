@@ -1,47 +1,259 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="es" class="h-full">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <!-- Meta refresh para recargar la página después de 2 segundos -->
-    {% if get_flashed_messages() %}
-        <meta http-equiv="refresh" content="2;url={{ url_for('iniciar_sesion') }}">
-    {% endif %}
-    <title>Iniciar Sesión</title>
+    <title>Iniciar Sesión | Pizza App</title>
+    <link rel="icon" href="https://cdn-icons-png.flaticon.com/512/3595/3595455.png" type="image/png">
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/flowbite/1.8.1/flowbite.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.3.0/flowbite.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        .bg-pizza {
+            background-image: url('https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?q=80&w=1981&auto=format&fit=crop');
+            background-size: cover;
+            background-position: center;
+            background-blend-mode: overlay;
+        }
+        .input-transition {
+            transition: all 0.3s ease;
+        }
+        .input-transition:focus {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px -5px rgba(59, 130, 246, 0.3);
+        }
+        .btn-hover {
+            transition: all 0.3s ease;
+            background-size: 200% auto;
+            background-image: linear-gradient(to right, #3b82f6 0%, #8b5cf6 50%, #3b82f6 100%);
+        }
+        .btn-hover:hover {
+            background-position: right center;
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px -5px rgba(59, 130, 246, 0.5);
+        }
+        .floating {
+            animation: floating 3s ease-in-out infinite;
+        }
+        @keyframes floating {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+            100% { transform: translateY(0px); }
+        }
+    </style>
 </head>
-<body class="bg-gray-100 flex items-center justify-center min-h-screen">
+<body class="h-full bg-gradient-to-br from-blue-900 to-purple-900 flex items-center justify-center p-4">
+    <!-- Partículas de fondo -->
+    <div class="fixed inset-0 overflow-hidden">
+        <div class="absolute inset-0 bg-black bg-opacity-40"></div>
+        <div class="absolute inset-0 bg-pizza"></div>
+        <div id="particles-js" class="absolute inset-0"></div>
+    </div>
+
+    <!-- Mensajes de flash -->
     {% with messages = get_flashed_messages(with_categories=true) %}
         {% if messages %}
             {% for category, message in messages %}
-                <div class="fixed top-4 left-1/2 transform -translate-x-1/2 w-full max-w-md">
-                    <div class="p-4 mb-4 text-sm text-white rounded-lg {{ 'bg-green-500' if category == 'éxito' else 'bg-red-500' }}" role="alert">
-                        {{ message }}
+                <div class="fixed top-6 left-1/2 transform -translate-x-1/2 z-50 w-full max-w-md animate__animated animate__fadeInDown">
+                    <div class="p-4 rounded-lg shadow-lg {{ 'bg-green-600' if category == 'éxito' else 'bg-red-600' }} text-white flex items-center justify-between">
+                        <div class="flex items-center">
+                            <i class="{{ 'fas fa-check-circle' if category == 'éxito' else 'fas fa-exclamation-circle' }} mr-2"></i>
+                            <span>{{ message }}</span>
+                        </div>
+                        <button type="button" class="text-white hover:text-gray-200" onclick="this.parentElement.remove()">
+                            <i class="fas fa-times"></i>
+                        </button>
                     </div>
                 </div>
             {% endfor %}
         {% endif %}
     {% endwith %}
 
-    <div class="w-full max-w-md bg-white shadow-lg rounded-lg p-8">
-        <h2 class="text-2xl font-bold text-gray-900 text-center mb-6">Iniciar Sesión</h2>
-        <form method="POST" action="{{ url_for('iniciar_sesion') }}">
-            {{ formulario.csrf_token }}
-            <div class="mb-6">
-                <label for="username" class="block mb-2 text-sm font-medium text-gray-900">Nombre de usuario</label>
-                <input type="text" id="username" name="username" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" placeholder="Ingresa tu nombre de usuario" required>
+    <!-- Tarjeta principal -->
+    <div class="relative w-full max-w-md z-10 animate__animated animate__fadeInUp">
+        <div class="bg-white bg-opacity-90 backdrop-blur-lg rounded-xl shadow-2xl overflow-hidden">
+            <!-- Elementos decoracionales -->
+            <div class="absolute -top-16 left-1/2 transform -translate-x-1/2">
+                <div class="bg-blue-600 rounded-full p-4 shadow-lg floating">
+                    <i class="fas fa-pizza-slice text-white text-4xl"></i>
+                </div>
             </div>
-            <div class="mb-6">
-                <label for="password" class="block mb-2 text-sm font-medium text-gray-900">Contraseña</label>
-                <input type="password" id="password" name="password" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" placeholder="••••••••" required>
+            
+            <!-- Contenido -->
+            <div class="px-8 py-12 pt-20">
+                <h2 class="text-3xl font-extrabold text-center text-gray-900 mb-2">
+                    ¡Bienvenido!
+                </h2>
+                <p class="text-center text-gray-600 mb-8">
+                    Inicia sesión para disfrutar de nuestras pizzas
+                </p>
+                
+                <form method="POST" action="{{ url_for('iniciar_sesion') }}" class="space-y-6">
+                    {{ formulario.csrf_token }}
+                    
+                    <div>
+                        <label for="username" class="block text-sm font-medium text-gray-700 mb-1">
+                            <i class="fas fa-user mr-2 text-blue-600"></i>Usuario
+                        </label>
+                        <div class="relative">
+                            <input type="text" id="username" name="username" 
+                                   class="input-transition w-full px-4 py-3 rounded-lg border border-gray-300 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 pl-10" 
+                                   placeholder="Usuario" required>
+                            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                <i class="fas fa-user text-gray-400"></i>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div>
+                        <label for="password" class="block text-sm font-medium text-gray-700 mb-1">
+                            <i class="fas fa-lock mr-2 text-blue-600"></i>Contraseña
+                        </label>
+                        <div class="relative">
+                            <input type="password" id="password" name="password" 
+                                   class="input-transition w-full px-4 py-3 rounded-lg border border-gray-300 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 pl-10" 
+                                   placeholder="••••••••" required>
+                            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                <i class="fas fa-lock text-gray-400"></i>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="flex items-center justify-between">
+                        <div class="flex items-center">
+                            <input id="remember-me" name="remember-me" type="checkbox" 
+                                   class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded">
+                            <label for="remember-me" class="ml-2 block text-sm text-gray-700">
+                                Recuérdame
+                            </label>
+                        </div>
+                        <div class="text-sm">
+                            <a href="#" class="font-medium text-blue-600 hover:text-blue-500">
+                                ¿Olvidaste tu contraseña?
+                            </a>
+                        </div>
+                    </div>
+                    
+                    <button type="submit" 
+                            class="btn-hover w-full flex justify-center py-3 px-4 border border-transparent rounded-lg shadow-sm text-lg font-medium text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+                        <i class="fas fa-sign-in-alt mr-2"></i> Iniciar Sesión
+                    </button>
+                </form>
+                
+                <div class="mt-6">
+                    <div class="relative">
+                        <div class="absolute inset-0 flex items-center">
+                            <div class="w-full border-t border-gray-300"></div>
+                        </div>
+                        <div class="relative flex justify-center text-sm">
+                            <span class="px-2 bg-white bg-opacity-90 text-gray-500">
+                                ¿No tienes cuenta?
+                            </span>
+                        </div>
+                    </div>
+                    
+                    <div class="mt-6">
+                        <a href="{{ url_for('registro') }}" 
+                           class="w-full flex items-center justify-center px-4 py-2 border border-gray-300 rounded-lg shadow-sm text-base font-medium text-gray-700 bg-white hover:bg-gray-50 transition duration-300">
+                           <i class="fas fa-user-plus mr-2 text-purple-600"></i> Regístrate aquí
+                        </a>
+                    </div>
+                </div>
             </div>
-            <button type="submit" class="w-full text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center">Iniciar Sesión</button>
-        </form>
-        <p class="text-sm text-gray-600 mt-4 text-center">
-            ¿No tienes una cuenta? <a href="{{ url_for('registro') }}" class="text-blue-600 hover:underline">Regístrate</a>
-        </p>
+        </div>
     </div>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/1.8.1/flowbite.min.js"></script>
+
+    <!-- Scripts -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.3.0/flowbite.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js"></script>
+    <script>
+        // Configuración de Particles.js
+        document.addEventListener('DOMContentLoaded', function() {
+            particlesJS("particles-js", {
+                "particles": {
+                    "number": {
+                        "value": 80,
+                        "density": {
+                            "enable": true,
+                            "value_area": 800
+                        }
+                    },
+                    "color": {
+                        "value": "#ffffff"
+                    },
+                    "shape": {
+                        "type": "circle",
+                        "stroke": {
+                            "width": 0,
+                            "color": "#000000"
+                        }
+                    },
+                    "opacity": {
+                        "value": 0.5,
+                        "random": false
+                    },
+                    "size": {
+                        "value": 3,
+                        "random": true
+                    },
+                    "line_linked": {
+                        "enable": true,
+                        "distance": 150,
+                        "color": "#ffffff",
+                        "opacity": 0.4,
+                        "width": 1
+                    },
+                    "move": {
+                        "enable": true,
+                        "speed": 2,
+                        "direction": "none",
+                        "random": false,
+                        "straight": false,
+                        "out_mode": "out",
+                        "bounce": false
+                    }
+                },
+                "interactivity": {
+                    "detect_on": "canvas",
+                    "events": {
+                        "onhover": {
+                            "enable": true,
+                            "mode": "grab"
+                        },
+                        "onclick": {
+                            "enable": true,
+                            "mode": "push"
+                        },
+                        "resize": true
+                    },
+                    "modes": {
+                        "grab": {
+                            "distance": 140,
+                            "line_linked": {
+                                "opacity": 1
+                            }
+                        },
+                        "push": {
+                            "particles_nb": 4
+                        }
+                    }
+                },
+                "retina_detect": true
+            });
+        });
+
+        // Efectos de foco de entrada
+        document.querySelectorAll('input').forEach(input => {
+            input.addEventListener('focus', function() {
+                this.parentElement.querySelector('i').classList.add('text-blue-500');
+                this.parentElement.querySelector('i').classList.remove('text-gray-400');
+            });
+            input.addEventListener('blur', function() {
+                this.parentElement.querySelector('i').classList.remove('text-blue-500');
+                this.parentElement.querySelector('i').classList.add('text-gray-400');
+            });
+        });
+    </script>
 </body>
 </html>

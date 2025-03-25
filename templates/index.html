@@ -1,109 +1,330 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Don Pizzero</title>
-    <!-- Flowbite and Tailwind CSS -->
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.0.0/flowbite.min.css" rel="stylesheet" />
-    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
-</head>
-<body class="bg-gray-50 dark:bg-gray-900">
-    <div class="container mx-auto p-4">
-        <nav class="bg-white border-gray-200 dark:bg-gray-800 dark:border-gray-700 rounded-lg shadow mb-6">
+{% extends "base.html" %}
+
+{% block title %}Dashboard - Don Pizzero{% endblock %}
+
+{% block extra_css %}
+<style>
+    .bg-pizza-pattern {
+        background-image: url('https://images.unsplash.com/photo-1513104890138-7c749659a591?q=80&w=2070&auto=format&fit=crop');
+        background-size: cover;
+        background-position: center;
+        background-blend-mode: overlay;
+    }
+    .glass-effect {
+        background: rgba(255, 255, 255, 0.85);
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
+    }
+    .dark .glass-effect {
+        background: rgba(31, 41, 55, 0.85);
+    }
+    .btn-hover {
+        transition: all 0.3s ease;
+        background-size: 200% auto;
+    }
+    .btn-hover:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 10px 20px -5px rgba(0, 0, 0, 0.2);
+    }
+    .input-transition {
+        transition: all 0.3s ease;
+    }
+    .input-transition:focus {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px -5px rgba(59, 130, 246, 0.3);
+    }
+    .floating {
+        animation: floating 3s ease-in-out infinite;
+    }
+    @keyframes floating {
+        0% { transform: translateY(0px); }
+        50% { transform: translateY(-8px); }
+        100% { transform: translateY(0px); }
+    }
+    .pizza-spin {
+        animation: pizzaSpin 20s linear infinite;
+    }
+    @keyframes pizzaSpin {
+        from { transform: rotate(0deg); }
+        to { transform: rotate(360deg); }
+    }
+    .highlight-row {
+        transition: all 0.3s ease;
+    }
+    .highlight-row:hover {
+        transform: scale(1.01);
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="h-full bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-900 dark:to-gray-800 bg-pizza-pattern">
+    <!-- Fondo opaco -->
+    <div class="fixed inset-0 bg-black/10 dark:bg-black/30 z-0"></div>
+
+    <div class="container mx-auto p-4 relative z-10">
+        <!-- Navbar -->
+        <nav class="glass-effect border border-gray-200 dark:border-gray-700 rounded-xl shadow-lg mb-6 animate__animated animate__fadeInDown">
             <div class="flex flex-wrap items-center justify-between mx-auto p-4">
-                <a href="#" class="flex items-center">
-                    <svg class="w-8 h-8 text-red-500 mr-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
-                        <path d="M10 0a10 10 0 1 0 10 10A10.011 10.011 0 0 0 10 0Zm0 18a8 8 0 1 1 0-16 8 8 0 0 1 0 16Zm1-8h4a1 1 0 0 1 0 2h-4a1 1 0 0 1 0-2Zm-2-2H5a1 1 0 0 0 0 2h4a1 1 0 0 0 0-2Zm-4 6h10a1 1 0 0 0 0-2H5a1 1 0 0 0 0 2Z"/>
-                    </svg>
-                    <span class="self-center text-2xl font-semibold whitespace-nowrap dark:text-white">Don Pizzero</span>
+                <a href="#" class="flex items-center space-x-3 rtl:space-x-reverse group">
+                    <div class="bg-gradient-to-r from-red-500 to-orange-500 p-2 rounded-full group-hover:rotate-12 transition-transform duration-300">
+                        <svg class="w-8 h-8 text-white pizza-spin" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
+                            <path d="M10 0a10 10 0 1 0 10 10A10.011 10.011 0 0 0 10 0Zm0 18a8 8 0 1 1 0-16 8 8 0 0 1 0 16Zm1-8h4a1 1 0 0 1 0 2h-4a1 1 0 0 1 0-2Zm-2-2H5a1 1 0 0 0 0 2h4a1 1 0 0 0 0-2Zm-4 6h10a1 1 0 0 0 0-2H5a1 1 0 0 0 0 2Z"/>
+                        </svg>
+                    </div>
+                    <span class="self-center text-2xl font-bold whitespace-nowrap dark:text-white">
+                        <span class="text-transparent bg-clip-text bg-gradient-to-r from-red-500 to-orange-500">Don</span> Pizzero
+                    </span>
                 </a>
-                <!-- Botón de Cerrar Sesión -->
-                <div>
-                    <a href="{{ url_for('cerrar_sesion') }}" class="text-white bg-red-600 hover:bg-red-700 focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 dark:bg-red-500 dark:hover:bg-red-600 focus:outline-none dark:focus:ring-red-800">
-                        Cerrar Sesión
+                <!--  Sección de usuario -->
+                <div class="flex items-center space-x-4">
+                    <div class="hidden md:flex items-center space-x-1">
+                        <span class="text-sm font-medium dark:text-white">¡Hola, {{ current_user.username }}!</span>
+                        <span class="px-2 py-1 text-xs rounded-full {{ 'bg-purple-100 text-purple-800' if current_user.rol == 'profesor' else 'bg-blue-100 text-blue-800' }} dark:bg-opacity-20">
+                            {{ 'Profesor' if current_user.rol == 'profesor' else 'Alumno' }}
+                        </span>
+                    </div>
+                    <a href="{{ url_for('cerrar_sesion') }}" 
+                       class="btn-hover flex items-center text-white bg-gradient-to-r from-red-500 to-orange-500 hover:from-red-600 hover:to-orange-600 focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 dark:focus:ring-red-800 shadow-md">
+                        <i class="fas fa-sign-out-alt mr-2"></i> Cerrar Sesión
                     </a>
                 </div>
             </div>
         </nav>
         
-        <!-- Mensajes Flash -->
+        <!-- Mensajes de flash -->
         {% with messages = get_flashed_messages(with_categories=true) %}
             {% if messages %}
                 {% for category, message in messages %}
-                    <div id="alert-{{category}}" class="flex items-center p-4 mb-4 {% if category == 'success' %}text-green-800 bg-green-50 dark:bg-gray-800 dark:text-green-400{% else %}text-red-800 bg-red-50 dark:bg-gray-800 dark:text-red-400{% endif %} rounded-lg" role="alert">
-                        <div class="ms-3 text-sm font-medium">{{ message }}</div>
-                        <button type="button" class="ms-auto -mx-1.5 -my-1.5 bg-white text-gray-400 hover:text-gray-900 rounded-lg focus:ring-2 focus:ring-gray-300 p-1.5 hover:bg-gray-100 inline-flex items-center justify-center h-8 w-8 dark:bg-gray-800 dark:text-gray-500 dark:hover:text-white dark:hover:bg-gray-700" data-dismiss-target="#alert-{{category}}" aria-label="Close">
-                            <span class="sr-only">Cerrar</span>
-                            <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
-                                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"/>
-                            </svg>
+                    <div id="alert-{{ loop.index }}" class="flex items-center p-4 mb-4 rounded-lg animate__animated animate__fadeInDown 
+                        {% if category == 'success' %}bg-green-50 text-green-800 dark:bg-gray-800 dark:text-green-400
+                        {% else %}bg-red-50 text-red-800 dark:bg-gray-800 dark:text-red-400{% endif %}">
+                        <div class="flex items-center">
+                            <i class="fas {{ 'fa-check-circle' if category == 'success' else 'fa-exclamation-circle' }} mr-2"></i>
+                            <span class="font-medium">{{ message }}</span>
+                        </div>
+                        <button type="button" class="ml-auto -mx-1.5 -my-1.5 rounded-lg p-1.5 inline-flex items-center justify-center h-8 w-8 hover:bg-gray-100 dark:hover:bg-gray-700" 
+                                onclick="this.parentElement.remove()">
+                            <i class="fas fa-times"></i>
                         </button>
                     </div>
                 {% endfor %}
             {% endif %}
         {% endwith %}
 
+        <!-- Main content -->
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
+            <!-- Stats cards -->
+            <div class="glass-effect rounded-xl shadow-lg p-6 animate__animated animate__fadeInLeft">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-sm font-medium text-gray-500 dark:text-gray-400">Total Ventas Hoy</p>
+                        <p class="text-3xl font-bold dark:text-white">${{ total_ventas_periodo }}</p>
+                    </div>
+                    <div class="p-3 rounded-full bg-green-100 text-green-600 dark:bg-green-900 dark:text-green-200">
+                        <i class="fas fa-money-bill-wave text-xl"></i>
+                    </div>
+                </div>
+                <div class="mt-4">
+                    <div class="flex items-center justify-between text-sm">
+                        <span class="text-gray-500 dark:text-gray-400">Pedidos hoy</span>
+                        <span class="font-medium dark:text-white">{{ pedidos_filtrados|length }}</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="glass-effect rounded-xl shadow-lg p-6 animate__animated animate__fadeInUp">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-sm font-medium text-gray-500 dark:text-gray-400">Pizzas en Pedido</p>
+                        <p class="text-3xl font-bold dark:text-white">{{ pizzas|length }}</p>
+                    </div>
+                    <div class="p-3 rounded-full bg-blue-100 text-blue-600 dark:bg-blue-900 dark:text-blue-200">
+                        <i class="fas fa-pizza-slice text-xl"></i>
+                    </div>
+                </div>
+                <div class="mt-4">
+                    <div class="flex items-center justify-between text-sm">
+                        <span class="text-gray-500 dark:text-gray-400">Total a pagar</span>
+                        <span class="font-medium dark:text-white">${{ total }}</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="glass-effect rounded-xl shadow-lg p-6 animate__animated animate__fadeInRight">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-sm font-medium text-gray-500 dark:text-gray-400">Período Actual</p>
+                        <p class="text-xl font-bold dark:text-white">{{ titulo_periodo }}</p>
+                    </div>
+                    <div class="p-3 rounded-full bg-purple-100 text-purple-600 dark:bg-purple-900 dark:text-purple-200">
+                        <i class="fas fa-calendar-alt text-xl"></i>
+                    </div>
+                </div>
+                <div class="mt-4">
+                    <a href="#filtros" class="text-sm font-medium text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300">
+                        <i class="fas fa-filter mr-1"></i> Cambiar filtro
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Formulario de Filtros -->
+        <div id="filtros" class="glass-effect rounded-xl shadow-lg p-6 mb-6 animate__animated animate__fadeIn">
+            <h2 class="text-2xl font-bold mb-4 text-gray-900 dark:text-white flex items-center">
+                <i class="fas fa-filter mr-2 text-purple-500"></i> Filtros de Ventas
+            </h2>
+            <form method="GET" action="{{ url_for('index') }}" class="grid grid-cols-1 md:grid-cols-4 gap-4">
+                <div>
+                    <label for="periodo" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Período</label>
+                    <select id="periodo" name="periodo" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white">
+                        <option value="dia" {% if periodo == 'dia' %}selected{% endif %}>Diario</option>
+                        <option value="mes" {% if periodo == 'mes' %}selected{% endif %}>Mensual</option>
+                    </select>
+                </div>
+                <div>
+                    <label for="mes" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Mes</label>
+                    <select id="mes" name="mes" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white">
+                        {% for valor, nombre in meses %}
+                            <option value="{{ valor }}" {% if valor == mes_seleccionado %}selected{% endif %}>{{ nombre }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div id="dia-container" {% if periodo == 'mes' %}style="display: none;"{% endif %}>
+                    <label for="dia" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Día</label>
+                    <select id="dia" name="dia" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white">
+                        {% for valor, nombre in dias %}
+                            <option value="{{ valor }}" {% if valor == dia_seleccionado %}selected{% endif %}>{{ nombre }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="flex items-end">
+                    <button type="submit" class="btn-hover text-white bg-gradient-to-r from-purple-500 to-blue-500 hover:from-purple-600 hover:to-blue-600 focus:ring-4 focus:ring-purple-300 font-medium rounded-lg text-sm px-5 py-2.5 dark:focus:ring-purple-800 shadow-md w-full">
+                        <i class="fas fa-filter mr-2"></i> Aplicar Filtros
+                    </button>
+                </div>
+            </form>
+        </div>
+
         <!-- Formulario Unificado -->
-        <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-6 mb-6">
-            <h2 class="text-xl font-bold mb-4 text-gray-900 dark:text-white">Datos del Cliente y Agregar Pizza</h2>
+        <div class="glass-effect rounded-xl shadow-lg p-6 mb-6 animate__animated animate__fadeIn">
+            <h2 class="text-2xl font-bold mb-4 text-gray-900 dark:text-white flex items-center">
+                <i class="fas fa-user-circle mr-2 text-blue-500"></i> Datos del Cliente
+            </h2>
             <form method="POST">
                 {{ cliente_form.hidden_tag() }}
                 {{ pizza_form.hidden_tag() }}
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
-                    <div>
-                        {{ cliente_form.nombre.label(class="block mb-2 text-sm font-medium text-gray-900 dark:text-white") }}
-                        {{ cliente_form.nombre(class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white") }}
+                
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+                    <div class="animate__animated animate__fadeInLeft">
+                        <label for="nombre" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                            <i class="fas fa-user mr-2 text-blue-500"></i>Nombre Completo
+                        </label>
+                        <div class="relative">
+                            {{ cliente_form.nombre(class="input-transition w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-200 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white pl-10") }}
+                            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                <i class="fas fa-user text-gray-400"></i>
+                            </div>
+                        </div>
                     </div>
-                    <div>
-                        {{ cliente_form.direccion.label(class="block mb-2 text-sm font-medium text-gray-900 dark:text-white") }}
-                        {{ cliente_form.direccion(class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white") }}
+                    
+                    <div class="animate__animated animate__fadeInUp">
+                        <label for="direccion" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                            <i class="fas fa-map-marker-alt mr-2 text-blue-500"></i>Dirección
+                        </label>
+                        <div class="relative">
+                            {{ cliente_form.direccion(class="input-transition w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-200 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white pl-10") }}
+                            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                <i class="fas fa-map-marker-alt text-gray-400"></i>
+                            </div>
+                        </div>
                     </div>
-                    <div>
-                        {{ cliente_form.telefono.label(class="block mb-2 text-sm font-medium text-gray-900 dark:text-white") }}
-                        {{ cliente_form.telefono(class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white") }}
+                    
+                    <div class="animate__animated animate__fadeInRight">
+                        <label for="telefono" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                            <i class="fas fa-phone mr-2 text-blue-500"></i>Teléfono
+                        </label>
+                        <div class="relative">
+                            {{ cliente_form.telefono(class="input-transition w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-200 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white pl-10") }}
+                            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                <i class="fas fa-phone text-gray-400"></i>
+                            </div>
+                        </div>
                     </div>
                 </div>
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
-                    <div>
-                        {{ pizza_form.tamano.label(class="block mb-2 text-sm font-medium text-gray-900 dark:text-white") }}
-                        {{ pizza_form.tamano(class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white") }}
+
+                <h2 class="text-2xl font-bold mb-4 text-gray-900 dark:text-white flex items-center">
+                    <i class="fas fa-pizza-slice mr-2 text-orange-500"></i> Agregar Pizza
+                </h2>
+                
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+                    <div class="animate__animated animate__fadeInLeft" style="animation-delay: 0.1s;">
+                        <label for="tamano" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                            <i class="fas fa-ruler-combined mr-2 text-orange-500"></i>Tamaño
+                        </label>
+                        <div class="relative">
+                            {{ pizza_form.tamano(class="input-transition w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-orange-200 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white pl-10") }}
+                            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                <i class="fas fa-ruler-combined text-gray-400"></i>
+                            </div>
+                        </div>
                     </div>
-                    <div>
-                        {{ pizza_form.ingredientes.label(class="block mb-2 text-sm font-medium text-gray-900 dark:text-white") }}
-                        {{ pizza_form.ingredientes(class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white") }}
+                    
+                    <div class="animate__animated animate__fadeInUp" style="animation-delay: 0.2s;">
+                        <label for="ingredientes" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                            <i class="fas fa-pepper-hot mr-2 text-orange-500"></i>Ingredientes
+                        </label>
+                        <div class="relative">
+                            {{ pizza_form.ingredientes(class="input-transition w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-orange-200 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white pl-10") }}
+                            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                <i class="fas fa-pepper-hot text-gray-400"></i>
+                            </div>
+                        </div>
                     </div>
-                    <div>
-                        {{ pizza_form.cantidad.label(class="block mb-2 text-sm font-medium text-gray-900 dark:text-white") }}
-                        {{ pizza_form.cantidad(class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white") }}
+                    
+                    <div class="animate__animated animate__fadeInRight" style="animation-delay: 0.3s;">
+                        <label for="cantidad" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                            <i class="fas fa-calculator mr-2 text-orange-500"></i>Cantidad
+                        </label>
+                        <div class="relative">
+                            {{ pizza_form.cantidad(class="input-transition w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-orange-200 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white pl-10") }}
+                            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                <i class="fas fa-calculator text-gray-400"></i>
+                            </div>
+                        </div>
                     </div>
                 </div>
-                <div class="flex gap-4">
-                    <button type="submit" name="agregar_pizza" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">
-                        <svg class="w-4 h-4 mr-2 inline-block" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 18 18">
-                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 1v16M1 9h16"/>
-                        </svg>
-                        Agregar Pizza
+
+                <div class="flex flex-wrap gap-4 animate__animated animate__fadeInUp">
+                    <button type="submit" name="action" value="agregar_pizza" 
+                            class="btn-hover flex-1 text-white bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg px-5 py-3 text-center shadow-md">
+                        <i class="fas fa-plus-circle mr-2"></i> Agregar Pizza
                     </button>
-                    <button type="submit" name="terminar_pedido" class="text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-2.5 dark:bg-green-600 dark:hover:bg-green-700 focus:outline-none dark:focus:ring-green-800">
-                        <svg class="w-4 h-4 mr-2 inline-block" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
-                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m7 10 2 2 4-4m6 2a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"/>
-                        </svg>
-                        Terminar Pedido
+                    <button type="submit" name="action" value="terminar_pedido" 
+                            class="btn-hover flex-1 text-white bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 focus:ring-4 focus:ring-green-300 font-medium rounded-lg px-5 py-3 text-center shadow-md">
+                        <i class="fas fa-check-circle mr-2"></i> Terminar Pedido
                     </button>
                 </div>
             </form>
         </div>
 
         <!-- Lista de Pizzas en el Pedido -->
-        <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-6 mb-6">
-            <div class="flex justify-between items-center mb-4">
-                <h2 class="text-xl font-bold dark:text-white">Ticket Pedido</h2>
-                <p class="text-xl font-bold text-gray-900 dark:text-white">Total: ${{ total }}</p>
+        <div class="glass-effect rounded-xl shadow-lg p-6 mb-6 animate__animated animate__fadeInUp">
+            <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6">
+                <h2 class="text-2xl font-bold dark:text-white flex items-center mb-4 sm:mb-0">
+                    <i class="fas fa-receipt mr-2 text-purple-500"></i> Ticket del Pedido
+                </h2>
+                <div class="bg-gradient-to-r from-purple-100 to-blue-100 dark:from-purple-900 dark:to-blue-900 px-4 py-3 rounded-lg shadow-inner">
+                    <p class="text-xl font-bold text-gray-900 dark:text-white">
+                        <i class="fas fa-coins mr-2 text-yellow-500"></i> Total: ${{ total }}
+                    </p>
+                </div>
             </div>
-            <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
+            
+            <div class="relative overflow-x-auto rounded-xl">
                 <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
-                    <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+                    <thead class="text-xs text-gray-700 uppercase bg-gray-100 dark:bg-gray-700 dark:text-gray-300">
                         <tr>
                             <th scope="col" class="px-6 py-3">Tamaño</th>
                             <th scope="col" class="px-6 py-3">Ingredientes</th>
@@ -115,20 +336,33 @@
                     <tbody>
                         {% if pizzas %}
                             {% for pizza in pizzas %}
-                                <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
-                                    <td class="px-6 py-4">{{ pizza.tamano }}</td>
-                                    <td class="px-6 py-4">{{ pizza.ingredientes }}</td>
-                                    <td class="px-6 py-4">{{ pizza.cantidad }}</td>
-                                    <td class="px-6 py-4">${{ pizza.subtotal }}</td>
+                                <tr class="highlight-row bg-white border-b dark:bg-gray-800 dark:border-gray-700">
+                                    <td class="px-6 py-4 font-medium text-gray-900 dark:text-white">
+                                        <i class="fas fa-pizza-slice mr-2 
+                                           {{ 'text-green-500' if pizza.tamano == 'Chica' else 'text-yellow-500' if pizza.tamano == 'Mediana' else 'text-red-500' }}"></i>
+                                        {{ pizza.tamano }}
+                                    </td>
                                     <td class="px-6 py-4">
-                                        <form method="POST" style="display: inline;">
+                                        <div class="flex items-center">
+                                            <i class="fas fa-pepper-hot text-red-500 mr-2"></i>
+                                            {{ pizza.ingredientes }}
+                                        </div>
+                                    </td>
+                                    <td class="px-6 py-4">
+                                        <span class="bg-blue-100 text-blue-800 text-xs font-medium px-2.5 py-0.5 rounded dark:bg-blue-900 dark:text-blue-200">
+                                            {{ pizza.cantidad }}
+                                        </span>
+                                    </td>
+                                    <td class="px-6 py-4 font-medium text-gray-900 dark:text-white">
+                                        ${{ pizza.subtotal }}
+                                    </td>
+                                    <td class="px-6 py-4">
+                                        <form method="POST" class="inline">
                                             {{ cliente_form.hidden_tag() }}
                                             <input type="hidden" name="quitar_pizza" value="{{ loop.index0 }}">
-                                            <button type="submit" class="text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-sm px-3 py-1.5 dark:bg-red-600 dark:hover:bg-red-700 focus:outline-none dark:focus:ring-red-800">
-                                                <svg class="w-4 h-4 inline-block" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 18 20">
-                                                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M1 5h16M7 8v8m4-8v8M7 1h4a1 1 0 0 1 1 1v3H6V2a1 1 0 0 1 1-1ZM3 5h12v13a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V5Z"/>
-                                                </svg>
-                                                Quitar
+                                            <button type="submit" name="action" value="quitar_pizza"
+                                                    class="btn-hover text-white bg-gradient-to-r from-red-500 to-pink-500 hover:from-red-600 hover:to-pink-600 focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-sm px-3 py-2 text-center inline-flex items-center shadow-md">
+                                                <i class="fas fa-trash-alt mr-1"></i> Quitar
                                             </button>
                                         </form>
                                     </td>
@@ -136,7 +370,13 @@
                             {% endfor %}
                         {% else %}
                             <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
-                                <td colspan="5" class="px-6 py-4 text-center">No hay pizzas en el pedido</td>
+                                <td colspan="5" class="px-6 py-4 text-center text-gray-500 dark:text-gray-400">
+                                    <div class="flex flex-col items-center justify-center py-8">
+                                        <i class="fas fa-pizza-slice text-4xl text-gray-300 mb-3"></i>
+                                        <p class="text-lg">No hay pizzas en el pedido</p>
+                                        <p class="text-sm mt-1">Agrega pizzas para comenzar</p>
+                                    </div>
+                                </td>
                             </tr>
                         {% endif %}
                     </tbody>
@@ -145,14 +385,21 @@
         </div>
 
         <!-- Sección de Ventas -->
-        <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
-            <div class="flex justify-between items-center mb-4">
-                <h2 class="text-xl font-bold dark:text-white">Ventas de {{ titulo_periodo }}</h2>
-                <p class="text-xl font-bold text-gray-900 dark:text-white">Total Ventas: ${{ total_ventas_periodo }}</p>
+        <div class="glass-effect rounded-xl shadow-lg p-6 animate__animated animate__fadeInUp">
+            <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6">
+                <h2 class="text-2xl font-bold dark:text-white flex items-center mb-4 sm:mb-0">
+                    <i class="fas fa-chart-line mr-2 text-green-500"></i> Ventas de {{ titulo_periodo }}
+                </h2>
+                <div class="bg-gradient-to-r from-green-100 to-blue-100 dark:from-green-900 dark:to-blue-900 px-4 py-3 rounded-lg shadow-inner">
+                    <p class="text-xl font-bold text-gray-900 dark:text-white">
+                        <i class="fas fa-wallet mr-2 text-green-500"></i> Total: ${{ total_ventas_periodo }}
+                    </p>
+                </div>
             </div>
-            <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
+            
+            <div class="relative overflow-x-auto rounded-xl">
                 <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
-                    <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+                    <thead class="text-xs text-gray-700 uppercase bg-gray-100 dark:bg-gray-700 dark:text-gray-300">
                         <tr>
                             <th scope="col" class="px-6 py-3">Cliente</th>
                             <th scope="col" class="px-6 py-3">Teléfono</th>
@@ -164,17 +411,44 @@
                     <tbody>
                         {% if pedidos_filtrados %}
                             {% for pedido in pedidos_filtrados %}
-                                <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
-                                    <td class="px-6 py-4">{{ pedido.nombre }}</td>
-                                    <td class="px-6 py-4">{{ pedido.telefono }}</td>
-                                    <td class="px-6 py-4">{{ pedido.direccion }}</td>
-                                    <td class="px-6 py-4">{{ pedido.fecha.strftime('%d/%m/%Y %H:%M') }}</td>
-                                    <td class="px-6 py-4">${{ pedido.total }}</td>
+                                <tr class="highlight-row bg-white border-b dark:bg-gray-800 dark:border-gray-700">
+                                    <td class="px-6 py-4 font-medium text-gray-900 dark:text-white">
+                                        <i class="fas fa-user-circle mr-2 text-blue-500"></i>
+                                        {{ pedido.nombre }}
+                                    </td>
+                                    <td class="px-6 py-4">
+                                        <div class="flex items-center">
+                                            <i class="fas fa-phone text-green-500 mr-2"></i>
+                                            {{ pedido.telefono }}
+                                        </div>
+                                    </td>
+                                    <td class="px-6 py-4">
+                                        <div class="flex items-center">
+                                            <i class="fas fa-map-marker-alt text-red-500 mr-2"></i>
+                                            {{ pedido.direccion|truncate(20) }}
+                                        </div>
+                                    </td>
+                                    <td class="px-6 py-4">
+                                        <span class="bg-purple-100 text-purple-800 text-xs font-medium px-2.5 py-0.5 rounded dark:bg-purple-900 dark:text-purple-200">
+                                            {{ pedido.fecha.strftime('%d/%m/%Y %H:%M') }}
+                                        </span>
+                                    </td>
+                                    <td class="px-6 py-4 font-medium text-gray-900 dark:text-white">
+                                        <span class="bg-green-100 text-green-800 text-xs font-medium px-2.5 py-0.5 rounded dark:bg-green-900 dark:text-green-200">
+                                            ${{ pedido.total }}
+                                        </span>
+                                    </td>
                                 </tr>
                             {% endfor %}
                         {% else %}
                             <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
-                                <td colspan="5" class="px-6 py-4 text-center">No hay ventas en el período seleccionado</td>
+                                <td colspan="5" class="px-6 py-4 text-center text-gray-500 dark:text-gray-400">
+                                    <div class="flex flex-col items-center justify-center py-8">
+                                        <i class="fas fa-chart-pie text-4xl text-gray-300 mb-3"></i>
+                                        <p class="text-lg">No hay ventas en este período</p>
+                                        <p class="text-sm mt-1">Realiza pedidos para ver estadísticas</p>
+                                    </div>
+                                </td>
                             </tr>
                         {% endif %}
                     </tbody>
@@ -183,7 +457,99 @@
         </div>
     </div>
 
-    <!-- Script de Flowbite -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.0.0/flowbite.min.js"></script>
-</body>
-</html>
+    <!-- Pie de página -->
+    <footer class="bg-white dark:bg-gray-800 border-t border-gray-200 dark:border-gray-700 mt-8 py-6">
+        <div class="container mx-auto px-4">
+            <div class="flex flex-col md:flex-row justify-between items-center">
+                <div class="flex items-center mb-4 md:mb-0">
+                    <svg class="w-6 h-6 text-red-500 mr-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
+                        <path d="M10 0a10 10 0 1 0 10 10A10.011 10.011 0 0 0 10 0Zm0 18a8 8 0 1 1 0-16 8 8 0 0 1 0 16Zm1-8h4a1 1 0 0 1 0 2h-4a1 1 0 0 1 0-2Zm-2-2H5a1 1 0 0 0 0 2h4a1 1 0 0 0 0-2Zm-4 6h10a1 1 0 0 0 0-2H5a1 1 0 0 0 0 2Z"/>
+                    </svg>
+                    <span class="text-sm font-medium dark:text-white">Don Pizzero © 2023</span>
+                </div>
+                <div class="flex space-x-4">
+                    <a href="#" class="text-gray-500 hover:text-gray-700 dark:hover:text-white">
+                        <i class="fab fa-facebook-f"></i>
+                    </a>
+                    <a href="#" class="text-gray-500 hover:text-gray-700 dark:hover:text-white">
+                        <i class="fab fa-twitter"></i>
+                    </a>
+                    <a href="#" class="text-gray-500 hover:text-gray-700 dark:hover:text-white">
+                        <i class="fab fa-instagram"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </footer>
+</div>
+
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    // Mostrar/ocultar selector de día según el período
+    document.getElementById('periodo').addEventListener('change', function() {
+        const diaContainer = document.getElementById('dia-container');
+        if (this.value === 'dia') {
+            diaContainer.style.display = 'block';
+        } else {
+            diaContainer.style.display = 'none';
+        }
+    });
+
+    // Validación de cantidad antes de agregar pizza
+    document.querySelector('button[name="action"][value="agregar_pizza"]').addEventListener('click', function(e) {
+        const cantidadInput = document.getElementById('cantidad');
+        if (cantidadInput && cantidadInput.value <= 0) {
+            e.preventDefault();
+            alert('La cantidad debe ser mayor que 0');
+            cantidadInput.focus();
+        }
+    });
+
+    // Animacion para los cards de estadísticas al pasar el ratón
+    document.querySelectorAll('.glass-effect').forEach(card => {
+        card.addEventListener('mouseenter', function() {
+            this.classList.add('shadow-lg');
+            this.style.transform = 'translateY(-5px)';
+        });
+        card.addEventListener('mouseleave', function() {
+            this.classList.remove('shadow-lg');
+            this.style.transform = '';
+        });
+    });
+
+    // Efectos de foco de entrada
+    document.querySelectorAll('input, select').forEach(input => {
+        input.addEventListener('focus', function() {
+            const icon = this.parentElement.querySelector('i');
+            if (icon) {
+                icon.classList.remove('text-gray-400');
+                if (this.name.includes('nombre') || this.name.includes('direccion') || this.name.includes('telefono')) {
+                    icon.classList.add('text-blue-500');
+                } else {
+                    icon.classList.add('text-orange-500');
+                }
+            }
+        });
+        input.addEventListener('blur', function() {
+            const icon = this.parentElement.querySelector('i');
+            if (icon) {
+                icon.classList.add('text-gray-400');
+                icon.classList.remove('text-blue-500', 'text-orange-500');
+            }
+        });
+    });
+
+    // Agrega animación de pulso a los botones cuando la página se carga
+    document.addEventListener('DOMContentLoaded', function() {
+        const buttons = document.querySelectorAll('button[type="submit"]');
+        buttons.forEach(button => {
+            button.classList.add('animate__animated', 'animate__pulse');
+            setTimeout(() => {
+                button.classList.remove('animate__pulse');
+            }, 2000);
+        });
+    });
+</script>
+{% endblock %}
