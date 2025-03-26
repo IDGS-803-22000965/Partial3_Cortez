@@ -26,6 +26,8 @@ class Pedido(db.Model):
     telefono = db.Column(db.String(15), nullable=False)
     fecha = db.Column(db.DateTime, default=datetime.now)
     total = db.Column(db.Float, nullable=False)
+    detalles = db.relationship('DetallePedido', backref='pedido', lazy=True)
+
 
 class DetallePedido(db.Model):
     __tablename__ = 'detalle_pedidos'

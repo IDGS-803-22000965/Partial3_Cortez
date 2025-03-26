@@ -44,13 +44,10 @@ def eliminar_pizzas_temp():
 
 @gestor_login.user_loader
 def cargar_usuario(id_usuario):
-    # Modificación para manejar tanto IDs numéricos como nombres de usuario
     try:
-        # Primero intenta con el ID numérico
-        return Usuario.query.get(int(id_usuario))
+        return db.session.get(Usuario, int(id_usuario))
     except (ValueError, TypeError):
-        # Si falla, busca por nombre de usuario
-        return Usuario.query.filter_by(username=id_usuario).first()
+        return db.session.query(Usuario).filter_by(username=id_usuario).first()
 
 @app.route('/')
 @login_required
@@ -60,18 +57,13 @@ def inicio():
 @app.route('/index', methods=['GET', 'POST'])
 @login_required
 def index():
-    # Inicialización de formularios
     cliente_form = ClienteForm()
     pizza_form = PizzaForm()
     
-    # Establecer valor por defecto para cantidad
-    pizza_form.cantidad.data = 0
     
-    # Obtener pizzas temporales y calcular total
     pizzas = obtener_pizzas_temp()
     total = sum(p['subtotal'] for p in pizzas) if pizzas else 0
     
-    # Configuración de filtros de fecha
     hoy = datetime.now()
     periodo = request.args.get('periodo', 'dia')
     mes_seleccionado = request.args.get('mes', str(hoy.month))
@@ -80,7 +72,6 @@ def index():
     meses = [(str(i), datetime(2000, i, 1).strftime('%B')) for i in range(1, 13)]
     dias = [(str(i), str(i)) for i in range(1, 32)]
     
-    # Consulta de pedidos filtrados
     if periodo == 'dia':
         pedidos_filtrados = Pedido.query.filter(
             db.func.month(Pedido.fecha) == int(mes_seleccionado),
@@ -95,24 +86,20 @@ def index():
     
     total_ventas_periodo = sum(pedido.total for pedido in pedidos_filtrados) if pedidos_filtrados else 0
     
-    # Aplicar filtros si es necesario
     if 'aplicar_filtro' in request.args:
         return redirect(url_for('index', 
                             periodo=request.args.get('periodo', 'dia'),
                             mes=request.args.get('mes', '1'),
                             dia=request.args.get('dia', '1')))
     
-    # Cargar datos del cliente desde sesión si existen
     if 'cliente_data' in session:
         cliente_form.nombre.data = session['cliente_data'].get('nombre', '')
         cliente_form.direccion.data = session['cliente_data'].get('direccion', '')
         cliente_form.telefono.data = session['cliente_data'].get('telefono', '')
     
-    # Procesamiento de formularios POST
     if request.method == 'POST':
         action = request.form.get('action')
         
-        # Guardar/actualizar datos del cliente en sesión
         session['cliente_data'] = {
             'nombre': request.form.get('nombre', ''),
             'direccion': request.form.get('direccion', ''),
@@ -121,7 +108,6 @@ def index():
         
         if action == 'agregar_pizza':
             if pizza_form.validate():
-                # Cálculo de precios sin validación de cantidad
                 precios_tamano = {'Chica': 40, 'Mediana': 80, 'Grande': 120}
                 precio_tamano = precios_tamano.get(pizza_form.tamano.data, 0)
                 precio_ingredientes = 10
@@ -157,7 +143,6 @@ def index():
                     return redirect(url_for('index'))
                 
                 try:
-                    # Crear nuevo pedido
                     nuevo_pedido = Pedido(
                         nombre=cliente_form.nombre.data,
                         direccion=cliente_form.direccion.data,
@@ -168,7 +153,6 @@ def index():
                     db.session.add(nuevo_pedido)
                     db.session.commit()
 
-                    # Añadir detalles del pedido
                     for pizza in pizzas:
                         detalle = DetallePedido(
                             pedido_id=nuevo_pedido.id,
@@ -193,7 +177,6 @@ def index():
                         flash(f'{getattr(cliente_form, field).label.text}: {error}', 'error')
                 return redirect(url_for('index'))
 
-    # Renderizar plantilla
     return render_template(
         'index.html',
         cliente_form=cliente_form,

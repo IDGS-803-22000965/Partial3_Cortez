@@ -1,6 +1,6 @@
 from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, SelectField, IntegerField, TextAreaField
-from wtforms.validators import DataRequired, Length, NumberRange
+from wtforms.validators import DataRequired, Length, ValidationError
 
 class FormularioLogin(FlaskForm):
     username = StringField('Nombre de usuario', validators=[DataRequired(), Length(min=4, max=50)])
@@ -22,9 +22,15 @@ class PizzaForm(FlaskForm):
         ('Mediana', 'Mediana ($80)'), 
         ('Grande', 'Grande ($120)')
     ], validators=[DataRequired()])
+    
     ingredientes = SelectField('Ingredientes', choices=[
         ('Jamón', 'Jamón ($10)'), 
         ('Piña', 'Piña ($10)'), 
         ('Champiñones', 'Champiñones ($10)')
     ], validators=[DataRequired()])
-    cantidad = IntegerField('Cantidad', validators=[DataRequired(), NumberRange(min=1)])
+    
+    cantidad = IntegerField('Cantidad', validators=[DataRequired()], default=1)
+    
+    def validate_cantidad(self, field):
+        if field.data is None or field.data < 1:
+            raise ValidationError('La cantidad debe ser al menos 1')

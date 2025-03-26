@@ -497,15 +497,7 @@
         }
     });
 
-    // Validación de cantidad antes de agregar pizza
-    document.querySelector('button[name="action"][value="agregar_pizza"]').addEventListener('click', function(e) {
-        const cantidadInput = document.getElementById('cantidad');
-        if (cantidadInput && cantidadInput.value <= 0) {
-            e.preventDefault();
-            alert('La cantidad debe ser mayor que 0');
-            cantidadInput.focus();
-        }
-    });
+   
 
     // Animacion para los cards de estadísticas al pasar el ratón
     document.querySelectorAll('.glass-effect').forEach(card => {
